@@ -68,7 +68,7 @@ class Blockchain {
             try{
                 block.height = await self.getChainHeight();
 
-                block.time = new Date().getTime().toString().slice(0,-3);
+                block.time = paresInt(new Date().getTime().toString().slice(0,-3));
                 console.log(block.time + " block time");
 
                 if(block.height > -1 ){
@@ -81,8 +81,7 @@ class Blockchain {
                 //console.log(block.hash + " block hash");
                 self.chain.push(block);
                 self.height ++;
-
-                console.log("block height should = ++: " + self.height);
+                
                 console.log(block);
                 resolve(block);
 
@@ -103,7 +102,7 @@ class Blockchain {
      */
     requestMessageOwnershipVerification(address) {
         return new Promise((resolve) => {
-            let time  = new Date().getTime().toString().slice(0,-3);
+            let time  = paresInt(new Date().getTime().toString().slice(0,-3));
 
             resolve(`${address}:${time}:starRegistry`);
         });
@@ -148,7 +147,8 @@ class Blockchain {
                 resolve(newBlock);
             }
             
-        }catch{
+        }catch (error){
+            console.log(error);
             reject(Error("Could not submit star"));
         }
             
@@ -174,12 +174,7 @@ class Blockchain {
                 resolve(block);
             }
 
-        
         });
-    }
-
-    _getTimeStamp(){
-        return 
     }
 
     /**
@@ -218,8 +213,9 @@ class Blockchain {
                 })
                 resolve(stars);
 
-            }catch{
-                reject(Error(""))
+            }catch (error){
+                console.log(error)
+                reject(Error("could not obtain stars for wallet address given"))
             }
             
         });
@@ -246,7 +242,7 @@ class Blockchain {
                     if(block.height < 1 ){
                         errorLog.push({error: 'Genesis block does not need verifying'})
                     }
-                    if(block.previousBlockHash !== previousBHash.hash){
+                    if(block.previousBlockHash !== previousBHash){
                         errorLog.push({error: 'hash of previous block does not match'})
                     }
                 })
