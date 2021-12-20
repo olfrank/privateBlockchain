@@ -1,8 +1,8 @@
 {
   "name": "privateblockchain_project1",
   "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "description": "This project creates a Blockchain application to store data into the blocks",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
