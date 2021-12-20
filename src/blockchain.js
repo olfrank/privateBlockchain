@@ -65,6 +65,7 @@ class Blockchain {
     _addBlock(block) {
         let self = this;
         return new Promise(async (resolve, reject) => {
+
             try{
                 block.height = await self.getChainHeight();
 
@@ -83,7 +84,15 @@ class Blockchain {
                 self.height ++;
                 
                 console.log(block);
-                resolve(block);
+
+                self.validateChain().then((errorLog) => {
+                    if(errorLog.length > 0){ // *** If the array has items or an error is thrown...
+                        self.chain.pop();// *** ...the block creation process must be aborted.
+                        reject(errorLog);
+                    }else{
+                        resolve(block);
+                    }
+                })
 
             }catch{
                 reject(Error("Failed to add new block"))
@@ -185,7 +194,7 @@ class Blockchain {
     getBlockByHeight(height) {
         let self = this;
         return new Promise((resolve, reject) => {
-            let block = self.chain.filter(p => p.height === height)[0];
+            let block = self.chain.find(p => p.height === height);
             if(block){
                 resolve(block);
             } else {
